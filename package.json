@@ -91,7 +91,18 @@
     "build-storybook": "storybook build",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx ./src",
     "lint:fix": "npm run lint -- --fix",
-    "format": "prettier ./src --write"
+    "format": "prettier ./src --write",
+    "test": "jest"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "jsdom",
+    "moduleNameMapper": {
+      "\\.(css|less|scss|sass)$": "<rootDir>/src/test/style-mock.js",
+      "^@ui$": "<rootDir>/src/components/ui",
+      "^@components$": "<rootDir>/src/components",
+      "^@pages$": "<rootDir>/src/pages"
+    }
   },
   "eslintConfig": {
     "extends": [
