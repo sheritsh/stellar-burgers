@@ -26,17 +26,44 @@ import {
   useLocation,
   useNavigate
 } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from '../../services/store';
+import { fetchIngredients } from '../../services/slices';
+import {
+  selectIngredients,
+  selectIngredientsError,
+  selectIngredientsLoading
+} from '../../services/selectors';
+import { Preloader } from '@ui';
 
 const App = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const background = (location.state as { background?: Location })?.background;
+  const dispatch = useDispatch();
+  const ingredients = useSelector(selectIngredients);
+  const isIngredientsLoading = useSelector(selectIngredientsLoading);
+  const ingredientsError = useSelector(selectIngredientsError);
 
   // Значения будут подключены к auth-слайсу на этапе настройки запросов.
   const isAuthChecked = true;
   const user = null;
 
   const closeModal = () => navigate(-1);
+
+  useEffect(() => {
+    dispatch(fetchIngredients());
+  }, [dispatch]);
+
+  if (isIngredientsLoading && !ingredients.length) return <Preloader />;
+
+  if (ingredientsError) {
+    return (
+      <div className={`${styles.error} text text_type_main-medium pt-4`}>
+        {ingredientsError}
+      </div>
+    );
+  }
 
   return (
     <div className={styles.app}>
