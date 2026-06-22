@@ -28,11 +28,13 @@ import {
 } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from '../../services/store';
-import { fetchIngredients } from '../../services/slices';
+import { fetchIngredients, fetchUser } from '../../services/slices';
 import {
+  selectIsAuthChecked,
   selectIngredients,
   selectIngredientsError,
-  selectIngredientsLoading
+  selectIngredientsLoading,
+  selectUser
 } from '../../services/selectors';
 import { Preloader } from '@ui';
 
@@ -45,14 +47,14 @@ const App = () => {
   const isIngredientsLoading = useSelector(selectIngredientsLoading);
   const ingredientsError = useSelector(selectIngredientsError);
 
-  // Значения будут подключены к auth-слайсу на этапе настройки запросов.
-  const isAuthChecked = true;
-  const user = null;
+  const isAuthChecked = useSelector(selectIsAuthChecked);
+  const user = useSelector(selectUser);
 
   const closeModal = () => navigate(-1);
 
   useEffect(() => {
     dispatch(fetchIngredients());
+    dispatch(fetchUser());
   }, [dispatch]);
 
   if (isIngredientsLoading && !ingredients.length) return <Preloader />;

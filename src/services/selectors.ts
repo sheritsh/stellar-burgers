@@ -1,5 +1,9 @@
 import { RootState } from './store';
 
+export const selectAuth = (state: RootState) => state.auth;
+export const selectUser = (state: RootState) => state.auth.user;
+export const selectIsAuthChecked = (state: RootState) =>
+  state.auth.isAuthChecked;
 export const selectIngredients = (state: RootState) => state.ingredients.items;
 export const selectIngredientsLoading = (state: RootState) =>
   state.ingredients.isLoading;

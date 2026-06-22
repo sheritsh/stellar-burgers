@@ -8,6 +8,7 @@ import {
 
 import {
   constructorReducer,
+  authReducer,
   feedReducer,
   ingredientsReducer,
   orderReducer,
@@ -15,6 +16,7 @@ import {
 } from './slices';
 
 export const rootReducer = combineReducers({
+  auth: authReducer,
   ingredients: ingredientsReducer,
   burgerConstructor: constructorReducer,
   feed: feedReducer,
