@@ -1,9 +1,11 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import {
   getUserApi,
+  forgotPasswordApi,
   loginUserApi,
   logoutApi,
   registerUserApi,
+  resetPasswordApi,
   TLoginData,
   TRegisterData,
   updateUserApi
@@ -54,6 +56,16 @@ export const fetchUser = createAsyncThunk('auth/fetchUser', async () => {
   return response.user;
 });
 
+export const requestPasswordReset = createAsyncThunk(
+  'auth/requestPasswordReset',
+  (email: string) => forgotPasswordApi({ email })
+);
+
+export const resetPassword = createAsyncThunk(
+  'auth/resetPassword',
+  (data: { password: string; token: string }) => resetPasswordApi(data)
+);
+
 export const updateUser = createAsyncThunk(
   'auth/updateUser',
   async (data: Partial<TRegisterData>) => {
@@ -88,13 +100,22 @@ const authSlice = createSlice({
       .addCase(loginUser.pending, startRequest)
       .addCase(loginUser.fulfilled, finishAuthRequest)
       .addCase(loginUser.rejected, failRequest)
+      .addCase(requestPasswordReset.pending, startRequest)
+      .addCase(requestPasswordReset.fulfilled, finishRequest)
+      .addCase(requestPasswordReset.rejected, failRequest)
+      .addCase(resetPassword.pending, startRequest)
+      .addCase(resetPassword.fulfilled, finishRequest)
+      .addCase(resetPassword.rejected, failRequest)
       .addCase(updateUser.pending, startRequest)
       .addCase(updateUser.fulfilled, finishAuthRequest)
       .addCase(updateUser.rejected, failRequest)
+      .addCase(logoutUser.pending, startRequest)
       .addCase(logoutUser.fulfilled, (state) => {
+        state.isLoading = false;
         state.user = null;
         state.error = null;
-      });
+      })
+      .addCase(logoutUser.rejected, failRequest);
   }
 });
 
@@ -107,6 +128,10 @@ function finishAuthRequest(state: TAuthState, action: { payload: TUser }) {
   state.isLoading = false;
   state.user = action.payload;
   state.isAuthChecked = true;
+}
+
+function finishRequest(state: TAuthState) {
+  state.isLoading = false;
 }
 
 function failRequest(

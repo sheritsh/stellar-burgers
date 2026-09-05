@@ -57,128 +57,149 @@ const App = () => {
     dispatch(fetchUser());
   }, [dispatch]);
 
-  if (isIngredientsLoading && !ingredients.length) return <Preloader />;
-
-  if (ingredientsError) {
-    return (
-      <div className={`${styles.error} text text_type_main-medium pt-4`}>
-        {ingredientsError}
-      </div>
-    );
-  }
-
   return (
     <div className={styles.app}>
       <AppHeader />
-      <Routes location={background || location}>
-        <Route path='/' element={<ConstructorPage />} />
-        <Route path='/feed' element={<Feed />} />
-        <Route path='/feed/:number' element={<OrderInfo />} />
-        <Route path='/ingredients/:id' element={<IngredientDetails />} />
-        <Route
-          path='/login'
-          element={
-            <ProtectedRoute
-              onlyUnAuth
-              user={user}
-              isAuthChecked={isAuthChecked}
-            >
-              <Login />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path='/register'
-          element={
-            <ProtectedRoute
-              onlyUnAuth
-              user={user}
-              isAuthChecked={isAuthChecked}
-            >
-              <Register />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path='/forgot-password'
-          element={
-            <ProtectedRoute
-              onlyUnAuth
-              user={user}
-              isAuthChecked={isAuthChecked}
-            >
-              <ForgotPassword />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path='/reset-password'
-          element={
-            <ProtectedRoute
-              onlyUnAuth
-              user={user}
-              isAuthChecked={isAuthChecked}
-            >
-              <ResetPassword />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path='/profile'
-          element={
-            <ProtectedRoute user={user} isAuthChecked={isAuthChecked}>
-              <Profile />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path='/profile/orders'
-          element={
-            <ProtectedRoute user={user} isAuthChecked={isAuthChecked}>
-              <ProfileOrders />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path='/profile/orders/:number'
-          element={
-            <ProtectedRoute user={user} isAuthChecked={isAuthChecked}>
-              <OrderInfo />
-            </ProtectedRoute>
-          }
-        />
-        <Route path='*' element={<NotFound404 />} />
-      </Routes>
-
-      {background && (
-        <Routes>
-          <Route
-            path='/ingredients/:id'
-            element={
-              <Modal title='Детали ингредиента' onClose={closeModal}>
-                <IngredientDetails />
-              </Modal>
-            }
-          />
-          <Route
-            path='/feed/:number'
-            element={
-              <Modal title='' onClose={closeModal}>
-                <OrderInfo />
-              </Modal>
-            }
-          />
-          <Route
-            path='/profile/orders/:number'
-            element={
-              <ProtectedRoute user={user} isAuthChecked={isAuthChecked}>
-                <Modal title='' onClose={closeModal}>
+      {isIngredientsLoading && !ingredients.length ? (
+        <Preloader />
+      ) : ingredientsError ? (
+        <div className={`${styles.error} text text_type_main-medium pt-4`}>
+          {ingredientsError}
+        </div>
+      ) : (
+        <>
+          <Routes location={background || location}>
+            <Route path='/' element={<ConstructorPage />} />
+            <Route path='/feed' element={<Feed />} />
+            <Route
+              path='/feed/:number'
+              element={
+                <main className={styles.detailPageWrap}>
                   <OrderInfo />
-                </Modal>
-              </ProtectedRoute>
-            }
-          />
-        </Routes>
+                </main>
+              }
+            />
+            <Route
+              path='/ingredients/:id'
+              element={
+                <main className={styles.detailPageWrap}>
+                  <h1
+                    className={`${styles.detailHeader} text text_type_main-large`}
+                  >
+                    Детали ингредиента
+                  </h1>
+                  <IngredientDetails />
+                </main>
+              }
+            />
+            <Route
+              path='/login'
+              element={
+                <ProtectedRoute
+                  onlyUnAuth
+                  user={user}
+                  isAuthChecked={isAuthChecked}
+                >
+                  <Login />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path='/register'
+              element={
+                <ProtectedRoute
+                  onlyUnAuth
+                  user={user}
+                  isAuthChecked={isAuthChecked}
+                >
+                  <Register />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path='/forgot-password'
+              element={
+                <ProtectedRoute
+                  onlyUnAuth
+                  user={user}
+                  isAuthChecked={isAuthChecked}
+                >
+                  <ForgotPassword />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path='/reset-password'
+              element={
+                <ProtectedRoute
+                  onlyUnAuth
+                  user={user}
+                  isAuthChecked={isAuthChecked}
+                >
+                  <ResetPassword />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path='/profile'
+              element={
+                <ProtectedRoute user={user} isAuthChecked={isAuthChecked}>
+                  <Profile />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path='/profile/orders'
+              element={
+                <ProtectedRoute user={user} isAuthChecked={isAuthChecked}>
+                  <ProfileOrders />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path='/profile/orders/:number'
+              element={
+                <ProtectedRoute user={user} isAuthChecked={isAuthChecked}>
+                  <main className={styles.detailPageWrap}>
+                    <OrderInfo />
+                  </main>
+                </ProtectedRoute>
+              }
+            />
+            <Route path='*' element={<NotFound404 />} />
+          </Routes>
+
+          {background && (
+            <Routes>
+              <Route
+                path='/ingredients/:id'
+                element={
+                  <Modal title='Детали ингредиента' onClose={closeModal}>
+                    <IngredientDetails />
+                  </Modal>
+                }
+              />
+              <Route
+                path='/feed/:number'
+                element={
+                  <Modal title='' onClose={closeModal}>
+                    <OrderInfo />
+                  </Modal>
+                }
+              />
+              <Route
+                path='/profile/orders/:number'
+                element={
+                  <ProtectedRoute user={user} isAuthChecked={isAuthChecked}>
+                    <Modal title='' onClose={closeModal}>
+                      <OrderInfo />
+                    </Modal>
+                  </ProtectedRoute>
+                }
+              />
+            </Routes>
+          )}
+        </>
       )}
     </div>
   );

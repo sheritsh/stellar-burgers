@@ -24,7 +24,7 @@ export const OrderInfo: FC = () => {
   const orderData =
     [...feedOrders, ...userOrders].find(
       (order) => order.number === orderNumber
-    ) || selectedOrder;
+    ) || (selectedOrder?.number === orderNumber ? selectedOrder : null);
 
   useEffect(() => {
     if (Number.isFinite(orderNumber) && !orderData) {
