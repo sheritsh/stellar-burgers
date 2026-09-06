@@ -14,8 +14,8 @@ const initialState: TIngredientsState = {
   error: null
 };
 
-const getErrorMessage = (error: unknown) =>
-  error instanceof Error ? error.message : 'Не удалось загрузить ингредиенты';
+const getErrorMessage = (error: { message?: string }) =>
+  error.message || 'Не удалось загрузить ингредиенты';
 
 export const fetchIngredients = createAsyncThunk(
   'ingredients/fetchAll',

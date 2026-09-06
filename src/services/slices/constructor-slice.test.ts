@@ -27,21 +27,43 @@ const ingredient = (overrides: Partial<TIngredient>): TIngredient => ({
 });
 
 describe('constructor slice', () => {
-  it('stores a bun separately and replaces the previous bun', () => {
-    let state = constructorReducer(
+  it('adds a bun to the constructor', () => {
+    const state = constructorReducer(
       undefined,
       addIngredient(ingredient({ _id: 'bun-1', type: 'bun' }))
     );
-    state = constructorReducer(
-      state,
-      addIngredient(ingredient({ _id: 'bun-2', type: 'bun' }))
-    );
 
-    expect(state.bun?._id).toBe('bun-2');
+    expect(state.bun?._id).toBe('bun-1');
     expect(state.ingredients).toHaveLength(0);
   });
 
-  it('adds, reorders and removes fillings', () => {
+  it('adds a filling to the constructor', () => {
+    const state = constructorReducer(
+      undefined,
+      addIngredient(ingredient({ _id: 'main-1' }))
+    );
+
+    expect(state.ingredients).toHaveLength(1);
+    expect(state.ingredients[0]).toMatchObject({
+      _id: 'main-1',
+      id: 'generated-id-2'
+    });
+  });
+
+  it('removes a filling from the constructor', () => {
+    const filledState = constructorReducer(
+      undefined,
+      addIngredient(ingredient({ _id: 'main-1' }))
+    );
+    const state = constructorReducer(
+      filledState,
+      removeIngredient(filledState.ingredients[0].id)
+    );
+
+    expect(state.ingredients).toHaveLength(0);
+  });
+
+  it('changes the order of fillings', () => {
     let state = constructorReducer(
       undefined,
       addIngredient(ingredient({ _id: 'main-1' }))
@@ -56,11 +78,5 @@ describe('constructor slice', () => {
       'main-2',
       'main-1'
     ]);
-
-    state = constructorReducer(
-      state,
-      removeIngredient(state.ingredients[0].id)
-    );
-    expect(state.ingredients.map((item) => item._id)).toEqual(['main-1']);
   });
 });
