@@ -1,4 +1,11 @@
-import { authReducer, fetchUser, loginUser, logoutUser } from './auth-slice';
+import {
+  authReducer,
+  fetchUser,
+  loginUser,
+  logoutUser,
+  requestPasswordReset,
+  updateUser
+} from './auth-slice';
 
 describe('auth slice', () => {
   const user = { name: 'Олег', email: 'oleg@example.com' };
@@ -28,5 +35,70 @@ describe('auth slice', () => {
       logoutUser.fulfilled(undefined, 'request-id', undefined)
     );
     expect(state.user).toBeNull();
+  });
+
+  it('marks an authentication request as loading', () => {
+    const state = authReducer(
+      {
+        user: null,
+        isAuthChecked: false,
+        isLoading: false,
+        error: 'Предыдущая ошибка'
+      },
+      loginUser.pending('request-id', {
+        email: user.email,
+        password: 'password'
+      })
+    );
+
+    expect(state.isLoading).toBe(true);
+    expect(state.error).toBeNull();
+  });
+
+  it('stores an authentication error and stops loading', () => {
+    const state = authReducer(
+      undefined,
+      loginUser.rejected(new Error('Неверный пароль'), 'request-id', {
+        email: user.email,
+        password: 'password'
+      })
+    );
+
+    expect(state.isLoading).toBe(false);
+    expect(state.isAuthChecked).toBe(true);
+    expect(state.error).toBe('Неверный пароль');
+  });
+
+  it('handles a failed user request', () => {
+    const state = authReducer(
+      { user, isAuthChecked: false, isLoading: false, error: null },
+      fetchUser.rejected(new Error('Ошибка'), 'request-id')
+    );
+
+    expect(state.user).toBeNull();
+    expect(state.isAuthChecked).toBe(true);
+  });
+
+  it('stops loading after a password reset request', () => {
+    const state = authReducer(
+      { user: null, isAuthChecked: true, isLoading: true, error: null },
+      requestPasswordReset.fulfilled(
+        { success: true },
+        'request-id',
+        user.email
+      )
+    );
+
+    expect(state.isLoading).toBe(false);
+  });
+
+  it('stores the updated user', () => {
+    const state = authReducer(
+      undefined,
+      updateUser.fulfilled(user, 'request-id', { name: user.name })
+    );
+
+    expect(state.user).toEqual(user);
+    expect(state.isAuthChecked).toBe(true);
   });
 });

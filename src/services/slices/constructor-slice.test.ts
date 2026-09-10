@@ -1,5 +1,6 @@
 import {
   addIngredient,
+  clearConstructor,
   constructorReducer,
   moveIngredient,
   removeIngredient
@@ -78,5 +79,15 @@ describe('constructor slice', () => {
       'main-2',
       'main-1'
     ]);
+  });
+
+  it('clears all constructor ingredients', () => {
+    const filledState = constructorReducer(
+      undefined,
+      addIngredient(ingredient({ _id: 'bun-1', type: 'bun' }))
+    );
+    const state = constructorReducer(filledState, clearConstructor());
+
+    expect(state).toEqual({ bun: null, ingredients: [] });
   });
 });
