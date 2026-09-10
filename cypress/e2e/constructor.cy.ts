@@ -9,6 +9,13 @@ const addIngredient = (name: string) => {
   });
 };
 
+const openIngredientDetails = (name: string) => {
+  cy.visit('/');
+  cy.wait('@getIngredients');
+  ingredientCard(name).find('a').click();
+  cy.get('[data-testid="modal"]').should('be.visible');
+};
+
 describe('burger constructor', () => {
   beforeEach(() => {
     cy.intercept('GET', '**/api/ingredients', {
@@ -41,25 +48,27 @@ describe('burger constructor', () => {
       .and('contain', 'Биокотлета из марсианской Магнолии');
   });
 
-  it('shows the selected ingredient details and closes the modal', () => {
-    cy.visit('/');
-    cy.wait('@getIngredients');
-
-    ingredientCard('Биокотлета из марсианской Магнолии').find('a').click();
+  it('shows the details of the selected ingredient', () => {
+    openIngredientDetails('Биокотлета из марсианской Магнолии');
 
     cy.get('[data-testid="modal"]')
-      .should('be.visible')
-      .and('contain', 'Биокотлета из марсианской Магнолии')
+      .should('contain', 'Биокотлета из марсианской Магнолии')
       .and('contain', '4242')
       .and('not.contain', 'Краторная булка N-200i');
+  });
+
+  it('closes the ingredient modal by clicking the close button', () => {
+    openIngredientDetails('Биокотлета из марсианской Магнолии');
 
     cy.get('[data-testid="modal"]')
       .find('button[aria-label="Закрыть"]')
       .click();
     cy.get('[data-testid="modal"]').should('not.exist');
+  });
 
-    ingredientCard('Краторная булка N-200i').find('a').click();
-    cy.get('[data-testid="modal"]').should('contain', 'Краторная булка N-200i');
+  it('closes the ingredient modal by clicking the overlay', () => {
+    openIngredientDetails('Краторная булка N-200i');
+
     cy.get('[data-testid="modal-overlay"]').click({ force: true });
     cy.get('[data-testid="modal"]').should('not.exist');
   });
