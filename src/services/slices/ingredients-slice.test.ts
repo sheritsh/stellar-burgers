@@ -1,7 +1,4 @@
-import {
-  fetchIngredients,
-  ingredientsReducer
-} from './ingredients-slice';
+import { fetchIngredients, ingredientsReducer } from './ingredients-slice';
 import { TIngredient } from '@utils-types';
 
 const ingredients: TIngredient[] = [
