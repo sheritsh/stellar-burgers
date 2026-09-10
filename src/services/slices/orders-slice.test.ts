@@ -44,6 +44,15 @@ describe('orders slice', () => {
     expect(state.isLoading).toBe(false);
   });
 
+  it('uses a default error for a failed user orders request', () => {
+    const state = ordersReducer(undefined, {
+      type: fetchOrders.rejected.type,
+      error: {}
+    });
+
+    expect(state.error).toBe('Не удалось загрузить заказы');
+  });
+
   it('sets loading state when an order details request starts', () => {
     const state = ordersReducer(
       undefined,
@@ -93,6 +102,15 @@ describe('orders slice', () => {
 
     expect(state.error).toBe('Заказ недоступен');
     expect(state.isLoading).toBe(false);
+  });
+
+  it('uses a default error for a failed order details request', () => {
+    const state = ordersReducer(undefined, {
+      type: fetchOrderByNumber.rejected.type,
+      error: {}
+    });
+
+    expect(state.error).toBe('Не удалось загрузить заказ');
   });
 
   it('clears the selected order', () => {

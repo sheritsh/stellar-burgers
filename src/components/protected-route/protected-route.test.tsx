@@ -60,6 +60,37 @@ describe('ProtectedRoute', () => {
     expect(screen.getByText('Constructor')).toBeInTheDocument();
   });
 
+  it('returns an authenticated user to the originally requested page', () => {
+    render(
+      <MemoryRouter
+        initialEntries={[
+          {
+            pathname: '/login',
+            state: { from: { pathname: '/profile' } }
+          }
+        ]}
+      >
+        <Routes>
+          <Route
+            path='/login'
+            element={
+              <ProtectedRoute
+                onlyUnAuth
+                isAuthChecked
+                user={{ name: 'Олег', email: 'oleg@example.com' }}
+              >
+                <div>Login</div>
+              </ProtectedRoute>
+            }
+          />
+          <Route path='/profile' element={<div>Profile</div>} />
+        </Routes>
+      </MemoryRouter>
+    );
+
+    expect(screen.getByText('Profile')).toBeInTheDocument();
+  });
+
   it('renders a private page for an authenticated user', () => {
     render(
       <MemoryRouter>

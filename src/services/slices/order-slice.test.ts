@@ -57,6 +57,15 @@ describe('order slice', () => {
     expect(state.error).toBe('Заказ не создан');
   });
 
+  it('uses a default error when order creation has no message', () => {
+    const state = orderReducer(undefined, {
+      type: createOrder.rejected.type,
+      error: {}
+    });
+
+    expect(state.error).toBe('Не удалось оформить заказ');
+  });
+
   it('closes the order modal and clears its error', () => {
     const state = orderReducer(
       {

@@ -52,4 +52,13 @@ describe('feed slice', () => {
     expect(state.error).toBe('Лента недоступна');
     expect(state.isLoading).toBe(false);
   });
+
+  it('uses a default error when the request has no message', () => {
+    const state = feedReducer(undefined, {
+      type: fetchFeed.rejected.type,
+      error: {}
+    });
+
+    expect(state.error).toBe('Не удалось загрузить ленту');
+  });
 });

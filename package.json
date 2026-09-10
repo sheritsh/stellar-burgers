@@ -110,6 +110,14 @@
       "^@api$": "<rootDir>/src/utils/burger-api.ts",
       "^@slices$": "<rootDir>/src/services/slices",
       "^@selectors$": "<rootDir>/src/services/selectors"
+    },
+    "coverageThreshold": {
+      "global": {
+        "branches": 80,
+        "functions": 80,
+        "lines": 80,
+        "statements": 80
+      }
     }
   },
   "eslintConfig": {

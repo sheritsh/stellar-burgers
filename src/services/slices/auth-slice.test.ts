@@ -69,6 +69,15 @@ describe('auth slice', () => {
     expect(state.error).toBe('Неверный пароль');
   });
 
+  it('uses a default authentication error when no message is provided', () => {
+    const state = authReducer(undefined, {
+      type: loginUser.rejected.type,
+      error: {}
+    });
+
+    expect(state.error).toBe('Ошибка авторизации');
+  });
+
   it('handles a failed user request', () => {
     const state = authReducer(
       { user, isAuthChecked: false, isLoading: false, error: null },

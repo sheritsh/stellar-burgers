@@ -45,4 +45,13 @@ describe('ingredients slice', () => {
     expect(state.error).toBe(error.message);
     expect(state.isLoading).toBe(false);
   });
+
+  it('uses a default error when the request has no message', () => {
+    const state = ingredientsReducer(undefined, {
+      type: fetchIngredients.rejected.type,
+      error: {}
+    });
+
+    expect(state.error).toBe('Не удалось загрузить ингредиенты');
+  });
 });
