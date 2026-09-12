@@ -1,43 +1,25 @@
 import { rootReducer } from './store';
+import {
+  authReducer,
+  constructorReducer,
+  feedReducer,
+  ingredientsReducer,
+  orderReducer,
+  ordersReducer
+} from './slices';
 
 describe('root reducer', () => {
   it('returns the complete initial state for an unknown action', () => {
-    const state = rootReducer(undefined, { type: 'UNKNOWN_ACTION' });
+    const unknownAction = { type: 'UNKNOWN_ACTION' };
+    const state = rootReducer(undefined, unknownAction);
 
     expect(state).toEqual({
-      auth: {
-        user: null,
-        isAuthChecked: false,
-        isLoading: false,
-        error: null
-      },
-      ingredients: {
-        items: [],
-        isLoading: false,
-        error: null
-      },
-      burgerConstructor: {
-        bun: null,
-        ingredients: []
-      },
-      feed: {
-        orders: [],
-        total: 0,
-        totalToday: 0,
-        isLoading: false,
-        error: null
-      },
-      orders: {
-        orders: [],
-        selectedOrder: null,
-        isLoading: false,
-        error: null
-      },
-      order: {
-        orderRequest: false,
-        orderModalData: null,
-        error: null
-      }
+      auth: authReducer(undefined, unknownAction),
+      ingredients: ingredientsReducer(undefined, unknownAction),
+      burgerConstructor: constructorReducer(undefined, unknownAction),
+      feed: feedReducer(undefined, unknownAction),
+      orders: ordersReducer(undefined, unknownAction),
+      order: orderReducer(undefined, unknownAction)
     });
   });
 });

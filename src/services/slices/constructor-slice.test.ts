@@ -6,11 +6,11 @@ import {
   removeIngredient
 } from './constructor-slice';
 import { TIngredient } from '@utils-types';
+import { v4 as uuidv4 } from 'uuid';
 
-jest.mock('uuid', () => {
-  let id = 0;
-  return { v4: () => `generated-id-${++id}` };
-});
+jest.mock('uuid', () => ({ v4: jest.fn() }));
+
+const uuidMock = uuidv4 as jest.MockedFunction<typeof uuidv4>;
 
 const ingredient = (overrides: Partial<TIngredient>): TIngredient => ({
   _id: 'ingredient-id',
@@ -28,6 +28,11 @@ const ingredient = (overrides: Partial<TIngredient>): TIngredient => ({
 });
 
 describe('constructor slice', () => {
+  beforeEach(() => {
+    uuidMock.mockReset();
+    uuidMock.mockReturnValue('generated-id-1');
+  });
+
   it('adds a bun to the constructor', () => {
     const state = constructorReducer(
       undefined,
@@ -47,7 +52,7 @@ describe('constructor slice', () => {
     expect(state.ingredients).toHaveLength(1);
     expect(state.ingredients[0]).toMatchObject({
       _id: 'main-1',
-      id: 'generated-id-2'
+      id: 'generated-id-1'
     });
   });
 

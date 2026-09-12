@@ -19,7 +19,10 @@ const ingredients: TIngredient[] = [
 
 describe('ingredients slice', () => {
   it('sets loading state when the request starts', () => {
-    const state = ingredientsReducer(undefined, fetchIngredients.pending('id'));
+    const state = ingredientsReducer(
+      { items: [], isLoading: false, error: 'Сервис недоступен' },
+      fetchIngredients.pending('id')
+    );
 
     expect(state.isLoading).toBe(true);
     expect(state.error).toBeNull();
