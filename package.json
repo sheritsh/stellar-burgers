@@ -54,7 +54,7 @@
     "babel-jest": "^29.7.0",
     "babel-loader": "^9.1.3",
     "css-loader": "^6.8.1",
-    "cypress": "^13.6.1",
+    "cypress": "^16.0.0",
     "dotenv-webpack": "^8.0.1",
     "eslint": "^8.56.0",
     "eslint-config-airbnb": "^19.0.4",
@@ -87,12 +87,16 @@
   },
   "scripts": {
     "start": "webpack serve --mode=development",
+    "build": "webpack --mode=production",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx ./src",
     "lint:fix": "npm run lint -- --fix",
     "format": "prettier ./src --write",
-    "test": "jest"
+    "test": "jest",
+    "test:coverage": "jest --coverage",
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run"
   },
   "jest": {
     "preset": "ts-jest",
@@ -106,6 +110,14 @@
       "^@api$": "<rootDir>/src/utils/burger-api.ts",
       "^@slices$": "<rootDir>/src/services/slices",
       "^@selectors$": "<rootDir>/src/services/selectors"
+    },
+    "coverageThreshold": {
+      "global": {
+        "branches": 80,
+        "functions": 80,
+        "lines": 80,
+        "statements": 80
+      }
     }
   },
   "eslintConfig": {
